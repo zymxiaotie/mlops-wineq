@@ -3,4 +3,7 @@ dvc[gdrive]
 scikit-learn
 pandas
 pyyaml
+pytest
+numpy
+
 

@@ -1,0 +1,9 @@
+[tox]
+envlist = py3.11, py3.12
+skipsdist = True  # as you are not mentioning setup.py file
+
+[testenv]
+deps = -requirements.txt
+commands = 
+    pytests -v # verbose
+    
