@@ -2,8 +2,10 @@ dvc
 dvc[gdrive]
 scikit-learn
 pandas
+numpy
 pyyaml
 pytest
-numpy
+tox
+flake8
 
 
