@@ -28,9 +28,9 @@ def predict(data):
     print(prediction)
     return prediction
 
-def api_response(request):
+def api_response(request): # use postman 
     try:
-        data = np.array([list(request.json.values())])
+        data = [list(request.json.values())]
         response= predict(data)
         response= {"response":response}
         return response
@@ -45,16 +45,15 @@ def index():
         try:
             if request.form:
                 data = dict(request.form).values()
-                data = np.array([list(map(float, data))])
+                data = [list(map(float, data))]
                 response = predict(data)
                 return render_template("index.html", response=response)
             elif request.json:
                 response = api_response(request)
                 return jsonify(response)
-
         except Exception as e:
             print(e)
-            error = {"error": "Something went wrong!! Try again later!"}
+            error = {"error": "Something went wrong!!! Try again later!"}
             return render_template("404.html", error=error)
     else:
         return render_template("index.html")
