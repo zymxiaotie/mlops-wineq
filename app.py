@@ -3,9 +3,8 @@ import os
 import yaml
 import joblib
 import numpy as np
-# from src import get_data 
+from prediction_service import prediction
 
-params_path = "params.yaml"
 webapp_root = "webapp"
 
 static_dir = os.path.join(webapp_root, "static")
@@ -15,41 +14,17 @@ app = Flask(__name__,
             static_folder=static_dir, 
             template_folder=template_dir)
 
-def read_params(config_path):
-    with open(config_path) as yaml_file:
-        config = yaml.safe_load(yaml_file)
-    return config
-
-def predict(data):
-    config=read_params(params_path)
-    model_dir_path = config["webapp_model_dir"]
-    model = joblib.load(model_dir_path)
-    prediction = model.predict(data)
-    print(prediction)
-    return prediction
-
-def api_response(request): # use postman 
-    try:
-        data = [list(request.json.values())]
-        response= predict(data)
-        response= {"response":response}
-        return response
-    except Exception as e:
-        print(e)
-        error = {"error": "Something went wrong!! Try again later!"}
-        return error
 
 @app.route("/", methods=["GET", "POST"])
 def index():
     if request.method == "POST":
         try:
             if request.form:
-                data = dict(request.form).values()
-                data = [list(map(float, data))]
-                response = predict(data)
+                data_req = dict(request.form)
+                response = prediction.form_response(data_req)
                 return render_template("index.html", response=response)
             elif request.json:
-                response = api_response(request)
+                response = prediction.app_response(request.json)
                 return jsonify(response)
         except Exception as e:
             print(e)
